@@ -7,10 +7,10 @@ import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { plan, saved, hydrated } = usePlan();
+  const { plan, saved } = usePlan();
 
-  const planCount = hydrated ? plan.length : 0;
-  const savedCount = hydrated ? saved.length : 0;
+  const planCount = plan.length;
+  const savedCount = saved.length;
 
   const links = [
     { href: "/", label: "Workout" },

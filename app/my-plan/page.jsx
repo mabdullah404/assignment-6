@@ -34,9 +34,7 @@ export default function MyPlanPage() {
     activeTab === "plan" ? PLAN_SORT_OPTIONS : SAVED_SORT_OPTIONS;
   const activeSortKey = currentOptions.some((option) => option.key === sortBy)
     ? sortBy
-    : activeTab === "plan"
-      ? "duration"
-      : "savedAt";
+    : "duration";
 
   const list = activeTab === "plan" ? plan : saved;
 
@@ -93,18 +91,16 @@ export default function MyPlanPage() {
           activeTab={activeTab}
           onChange={(tab) => {
             setActiveTab(tab);
-            setSortBy(tab === "plan" ? "duration" : "savedAt");
+            setSortBy("duration");
           }}
           planCount={plan.length}
           savedCount={saved.length}
         />
-        {sortedList.length > 0 && (
-          <SortDropdown
-            options={currentOptions}
-            sortBy={activeSortKey}
-            onChange={setSortBy}
-          />
-        )}
+        <SortDropdown
+          options={currentOptions}
+          sortBy={activeSortKey}
+          onChange={setSortBy}
+        />
       </div>
 
       {sortedList.length === 0 ? (

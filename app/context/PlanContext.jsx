@@ -9,45 +9,47 @@ const SAVED_KEY = "fitlog_saved";
 const MAX_PLAN_ITEMS = 5;
 
 export function PlanProvider({ children }) {
-  const [plan, setPlan] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const storedPlan = window.localStorage.getItem(PLAN_KEY);
-      return storedPlan ? JSON.parse(storedPlan) : [];
-    } catch (err) {
-      console.error("Failed to load plan data from localStorage:", err);
-      return [];
-    }
-  });
+  const [plan, setPlan] = useState([]);
+  const [saved, setSaved] = useState([]);
+  const [hydrated, setHydrated] = useState(false);
 
-  const [saved, setSaved] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const storedSaved = window.localStorage.getItem(SAVED_KEY);
-      return storedSaved ? JSON.parse(storedSaved) : [];
-    } catch (err) {
-      console.error("Failed to load saved data from localStorage:", err);
-      return [];
-    }
-  });
-
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    try {
+      const storedPlan = window.localStorage.getItem(PLAN_KEY);
+      const storedSaved = window.localStorage.getItem(SAVED_KEY);
+
+      setPlan(storedPlan ? JSON.parse(storedPlan) : []);
+      setSaved(storedSaved ? JSON.parse(storedSaved) : []);
+    } catch (err) {
+      console.error("Failed to load saved plan data from localStorage:", err);
+      setPlan([]);
+      setSaved([]);
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !hydrated) return;
     try {
       window.localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
     } catch (err) {
       console.error("Failed to save plan data:", err);
     }
-  }, [plan]);
+  }, [plan, hydrated]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !hydrated) return;
     try {
       window.localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
     } catch (err) {
       console.error("Failed to save 'saved' data:", err);
     }
-  }, [saved]);
+  }, [saved, hydrated]);
 
   function addToPlan(workout) {
     let added = false;

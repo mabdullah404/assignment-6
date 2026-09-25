@@ -2,13 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 
-const OPTIONS = [
+const DEFAULT_OPTIONS = [
   { key: "duration", label: "Duration" },
   { key: "caloriesBurned", label: "Calories" },
   { key: "rating", label: "Rating" },
 ];
 
-export default function SortDropdown({ sortBy, onChange }) {
+export default function SortDropdown({ options = DEFAULT_OPTIONS, sortBy = "duration", onChange }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -23,24 +23,25 @@ export default function SortDropdown({ sortBy, onChange }) {
   }, []);
 
   const currentLabel =
-    OPTIONS.find((o) => o.key === sortBy)?.label || "Duration";
+    options.find((o) => o.key === sortBy)?.label || options[0]?.label || "Duration";
 
   return (
-    <div className="relative inline-block" ref={ref}>
+    <div className="relative inline-flex items-center gap-2" ref={ref}>
+      <span className="text-sm text-neutral-400">Sort By</span>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 text-sm font-medium bg-transparent border border-neutral-600 rounded-full px-4 py-2 text-white hover:border-lime-400 transition-colors"
       >
-        Sort By: {currentLabel}
+        {currentLabel}
         <span className={`text-xs transition-transform ${open ? "rotate-180" : ""}`}>
-          ▾
+          ⌄
         </span>
       </button>
 
       {open && (
-        <ul className="absolute right-0 mt-2 w-40 bg-neutral-900 border border-neutral-700 rounded-lg shadow-lg overflow-hidden z-20 py-1">
-          {OPTIONS.map((opt) => (
+        <ul className="absolute right-0 top-full mt-2 w-40 bg-neutral-900 border border-neutral-700 rounded-lg shadow-lg overflow-hidden z-20 py-1">
+          {options.map((opt) => (
             <li key={opt.key}>
               <button
                 type="button"
