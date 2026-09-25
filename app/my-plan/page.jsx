@@ -9,19 +9,44 @@ import PlanCard from "@/components/my-plan/PlanCard";
 import EmptyState from "@/components/my-plan/EmptyState";
 import SortDropdown from "@/components/my-plan/SortDropdown";
 
+const PLAN_SORT_OPTIONS = [
+  { key: "duration", label: "Duration" },
+  { key: "caloriesBurned", label: "Calories" },
+  { key: "rating", label: "Rating" },
+];
+
+const SAVED_SORT_OPTIONS = [
+  { key: "savedAt", label: "Recently Added" },
+  { key: "duration", label: "Duration" },
+  { key: "caloriesBurned", label: "Calories" },
+  { key: "rating", label: "Rating" },
+];
+
 export default function MyPlanPage() {
-  const { plan, saved, hydrated, removeFromPlan, removeFromSaved, markPlanItemDone } =
+  const { plan, saved, removeFromPlan, removeFromSaved, markPlanItemDone } =
     usePlan();
   const { showToast } = useToast();
 
   const [activeTab, setActiveTab] = useState("plan");
   const [sortBy, setSortBy] = useState("duration");
 
+  const currentOptions =
+    activeTab === "plan" ? PLAN_SORT_OPTIONS : SAVED_SORT_OPTIONS;
+  const activeSortKey = currentOptions.some((option) => option.key === sortBy)
+    ? sortBy
+    : activeTab === "plan"
+      ? "duration"
+      : "savedAt";
+
   const list = activeTab === "plan" ? plan : saved;
 
   const sortedList = useMemo(() => {
-    return [...list].sort((a, b) => (b[sortBy] || 0) - (a[sortBy] || 0));
-  }, [list, sortBy]);
+    return [...list].sort((a, b) => {
+      const valueA = a[activeSortKey] ?? 0;
+      const valueB = b[activeSortKey] ?? 0;
+      return valueB - valueA;
+    });
+  }, [list, activeSortKey]);
 
   const totals = useMemo(() => {
     return plan.reduce(
@@ -48,14 +73,6 @@ export default function MyPlanPage() {
     showToast("Marked as done");
   }
 
-  if (!hydrated) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
-        <p className="text-neutral-400 text-sm">Loading workouts…</p>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
       <h1 className="font-oswald uppercase text-3xl font-bold mb-1">
@@ -74,12 +91,19 @@ export default function MyPlanPage() {
       <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
         <PlanTabs
           activeTab={activeTab}
-          onChange={setActiveTab}
+          onChange={(tab) => {
+            setActiveTab(tab);
+            setSortBy(tab === "plan" ? "duration" : "savedAt");
+          }}
           planCount={plan.length}
           savedCount={saved.length}
         />
         {sortedList.length > 0 && (
-          <SortDropdown sortBy={sortBy} onChange={setSortBy} />
+          <SortDropdown
+            options={currentOptions}
+            sortBy={activeSortKey}
+            onChange={setSortBy}
+          />
         )}
       </div>
 

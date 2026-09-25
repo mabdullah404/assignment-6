@@ -16,18 +16,30 @@ export default function WorkoutDetailPage() {
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
-    getWorkoutById(id)
-      .then((data) => {
-        if (isMounted) setWorkout(data);
-      })
-      .catch((err) => {
+
+    const loadWorkout = async () => {
+      setLoading(true);
+
+      try {
+        const data = await getWorkoutById(id);
+        if (!isMounted) return;
+
+        setWorkout(data);
+        if (!data) {
+          setError("Workout not found.");
+        } else {
+          setError(null);
+        }
+      } catch (err) {
         console.error(err);
         if (isMounted) setError("Workout not found.");
-      })
-      .finally(() => {
+      } finally {
         if (isMounted) setLoading(false);
-      });
+      }
+    };
+
+    loadWorkout();
+
     return () => {
       isMounted = false;
     };

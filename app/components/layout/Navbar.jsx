@@ -1,13 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePlan } from "@/context/PlanContext";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { plan, saved } = usePlan();
+  const { plan, saved, hydrated } = usePlan();
+
+  const planCount = hydrated ? plan.length : 0;
+  const savedCount = hydrated ? saved.length : 0;
 
   const links = [
     { href: "/", label: "Workout" },
@@ -15,17 +18,16 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-800 bg-neutral-950/95 backdrop-blur">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-
-          <div className="relative h-8 w-8 overflow-hidden rounded-md border border-[#1db6ff]/40 bg-[#09131d] p-1">
-            <Image src="/assets/logo.png" alt="FitLog logo" fill className="object-contain" />
-          </div>
-          <div><h1 className="font-bold text-lg">FITLOG</h1></div>
+    <header className="sticky top-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 shrink-0">
+          <Image src="/assets/logo.png" alt="FITLOG Logo" width={25} height={32} />
+          <span className="font-bold tracking-wide text-white">FITLOG</span>
         </Link>
 
-        <div className="hidden items-center gap-6 sm:flex">
+        {/* Nav links - middle */}
+        <div className="hidden sm:flex items-center gap-6">
           {links.map((link) => {
             const isActive =
               link.href === "/"
@@ -47,18 +49,19 @@ export default function Navbar() {
           })}
         </div>
 
+        {/* Right side badges */}
         <div className="flex items-center gap-2">
           <Link
             href="/my-plan"
-            className="rounded-full bg-lime-400 px-3 py-1 text-xs font-semibold text-neutral-950"
+            className="px-3 py-1 rounded-full text-xs font-semibold bg-lime-400 text-neutral-950"
           >
-            Plan {plan.length}
+            Plan {planCount}
           </Link>
           <Link
             href="/my-plan"
-            className="rounded-full border border-neutral-600 px-3 py-1 text-xs font-semibold text-neutral-200"
+            className="px-3 py-1 rounded-full text-xs font-semibold border border-neutral-600 text-neutral-200"
           >
-            Saved {saved.length}
+            Saved {savedCount}
           </Link>
         </div>
       </nav>

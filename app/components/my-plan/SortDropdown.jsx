@@ -26,34 +26,37 @@ export default function SortDropdown({ sortBy, onChange }) {
     OPTIONS.find((o) => o.key === sortBy)?.label || "Duration";
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative inline-block" ref={ref}>
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 text-sm font-medium bg-neutral-900 border border-neutral-800 rounded-full px-4 py-2 hover:border-lime-400 transition-colors"
+        className="flex items-center gap-2 text-sm font-medium bg-transparent border border-neutral-600 rounded-full px-4 py-2 text-white hover:border-lime-400 transition-colors"
       >
         Sort By: {currentLabel}
-        <span className={`transition-transform ${open ? "rotate-180" : ""}`}>
+        <span className={`text-xs transition-transform ${open ? "rotate-180" : ""}`}>
           ▾
         </span>
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-40 bg-neutral-900 border border-neutral-800 rounded-lg shadow-lg overflow-hidden z-10">
+        <ul className="absolute right-0 mt-2 w-40 bg-neutral-900 border border-neutral-700 rounded-lg shadow-lg overflow-hidden z-20 py-1">
           {OPTIONS.map((opt) => (
-            <button
-              key={opt.key}
-              onClick={() => {
-                onChange(opt.key);
-                setOpen(false);
-              }}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-neutral-800 transition-colors ${
-                sortBy === opt.key ? "text-lime-400" : "text-neutral-300"
-              }`}
-            >
-              {opt.label}
-            </button>
+            <li key={opt.key}>
+              <button
+                type="button"
+                onClick={() => {
+                  onChange(opt.key);
+                  setOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm transition-colors hover:bg-neutral-800 ${
+                  sortBy === opt.key ? "text-lime-400 font-semibold" : "text-neutral-300"
+                }`}
+              >
+                {opt.label}
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

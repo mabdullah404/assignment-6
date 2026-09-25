@@ -9,41 +9,45 @@ const SAVED_KEY = "fitlog_saved";
 const MAX_PLAN_ITEMS = 5;
 
 export function PlanProvider({ children }) {
-  const [plan, setPlan] = useState([]);
-  const [saved, setSaved] = useState([]);
-  const [hydrated, setHydrated] = useState(false);
+  const [plan, setPlan] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const storedPlan = window.localStorage.getItem(PLAN_KEY);
+      return storedPlan ? JSON.parse(storedPlan) : [];
+    } catch (err) {
+      console.error("Failed to load plan data from localStorage:", err);
+      return [];
+    }
+  });
+
+  const [saved, setSaved] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const storedSaved = window.localStorage.getItem(SAVED_KEY);
+      return storedSaved ? JSON.parse(storedSaved) : [];
+    } catch (err) {
+      console.error("Failed to load saved data from localStorage:", err);
+      return [];
+    }
+  });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    try {
-      const storedPlan = window.localStorage.getItem(PLAN_KEY);
-      const storedSaved = window.localStorage.getItem(SAVED_KEY);
-      if (storedPlan) setPlan(JSON.parse(storedPlan));
-      if (storedSaved) setSaved(JSON.parse(storedSaved));
-    } catch (err) {
-      console.error("Failed to load plan data from localStorage:", err);
-    } finally {
-      setHydrated(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated || typeof window === "undefined") return;
     try {
       window.localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
     } catch (err) {
       console.error("Failed to save plan data:", err);
     }
-  }, [plan, hydrated]);
+  }, [plan]);
 
   useEffect(() => {
-    if (!hydrated || typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
     try {
       window.localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
     } catch (err) {
       console.error("Failed to save 'saved' data:", err);
     }
-  }, [saved, hydrated]);
+  }, [saved]);
 
   function addToPlan(workout) {
     let added = false;
@@ -61,7 +65,7 @@ export function PlanProvider({ children }) {
     setSaved((prev) => {
       if (prev.some((w) => w.id === workout.id)) return prev;
       added = true;
-      return [...prev, workout];
+      return [...prev, { ...workout, savedAt: Date.now() }];
     });
     return added;
   }
@@ -95,7 +99,6 @@ export function PlanProvider({ children }) {
   const value = {
     plan,
     saved,
-    hydrated,
     addToPlan,
     addToSaved,
     removeFromPlan,
