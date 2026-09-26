@@ -1,24 +1,38 @@
-const API_URL = "https://api.abcz.workers.dev/api/fitlog";
-
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch data from ${url}`);
-  }
-
-  return response.json();
-}
+const FITLOG_API_BASE = "https://api.api-store.workers.dev/api/fitlog";
 
 export async function getAllWorkouts() {
-  return fetchJson(API_URL);
+  try {
+    const url = typeof window === "undefined" ? FITLOG_API_BASE : "/api/fitlog";
+    const res = await fetch(url, { cache: "no-store" });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    const data = await res.json();
+    return Array.isArray(data) ? data : data?.workouts ?? [];
+  } catch (error) {
+    console.error("Failed to fetch workouts:", error);
+    return [];
+  }
 }
 
 export async function getWorkoutById(id) {
   try {
-    return await fetchJson(`${API_URL}/${id}`);
+    const url =
+      typeof window === "undefined"
+        ? `${FITLOG_API_BASE}/${id}`
+        : `/api/fitlog/${id}`;
+    const res = await fetch(url, { cache: "no-store" });
+
+    if (!res.ok) {
+      return null;
+    }
+
+    const data = await res.json();
+    return data ?? null;
   } catch (error) {
-    console.error("Workout not found:", error);
+    console.error("Failed to fetch workout:", error);
     return null;
   }
 }

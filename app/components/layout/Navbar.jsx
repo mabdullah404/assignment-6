@@ -18,7 +18,6 @@ export default function Navbar() {
     { href: "/", label: "Workout" },
     { href: "/my-plan", label: "My Plan" },
   ];
-
   return (
     <header className="sticky top-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4">
