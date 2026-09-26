@@ -14,7 +14,7 @@ FitLog is a dark, no-nonsense gym companion web app where users can browse a lib
 - **Fetch API** — fetching live workout data from FitLog API
 
 
-Alternative APi:
+
 All data:
 https://api.api-store.workers.dev/api/fitlog
 Single Data:
