@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePlan } from "@/context/PlanContext";
@@ -8,6 +9,7 @@ import Image from "next/image";
 export default function Navbar() {
   const pathname = usePathname();
   const { plan, saved } = usePlan();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const planCount = plan.length;
   const savedCount = saved.length;
@@ -26,7 +28,7 @@ export default function Navbar() {
           <span className="font-bold tracking-wide text-white">FITLOG</span>
         </Link>
 
-        {/* Nav links - middle */}
+        {/* Nav links - middle (desktop only) */}
         <div className="hidden sm:flex items-center gap-6">
           {links.map((link) => {
             const isActive =
@@ -49,7 +51,7 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Right side badges */}
+        {/* Right side badges + mobile menu button */}
         <div className="flex items-center gap-2">
           <Link
             href="/my-plan"
@@ -63,8 +65,41 @@ export default function Navbar() {
           >
             Saved {savedCount}
           </Link>
+
+          {/* Hamburger - mobile only */}
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            className="sm:hidden ml-1 w-8 h-8 flex items-center justify-center text-neutral-300 text-lg"
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div className="sm:hidden border-t border-neutral-800 px-4 py-3 flex flex-col gap-3">
+          {links.map((link) => {
+            const isActive =
+              link.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`text-sm font-medium ${
+                  isActive ? "text-lime-400" : "text-neutral-400"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 }
