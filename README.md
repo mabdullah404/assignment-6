@@ -3,7 +3,7 @@
 FitLog is a dark, no-nonsense gym companion web app where users can browse a library of workouts, add lifts to today's plan, save workouts for later, and track their daily training progress — all in one clean, responsive interface.
 
 ## 🚀 Live Demo
-[Live Link](#)  : 
+[Live Link](#)  :  https://assignment-6-fitlog.netlify.app/
 
 ## 🛠️ Technologies Used
 - **Next.js** (App Router) — routing & page structure
