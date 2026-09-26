@@ -13,6 +13,14 @@ FitLog is a dark, no-nonsense gym companion web app where users can browse a lib
 - **LocalStorage API** — persisting plan/saved data across reloads
 - **Fetch API** — fetching live workout data from FitLog API
 
+
+Alternative APi:
+All data:
+https://api.api-store.workers.dev/api/fitlog
+Single Data:
+https://api.api-store.workers.dev/api/fitlog/:id
+
+
 ## ✨ Key Features
 1. **Dynamic Workout Library** — 12 workouts fetched live from the FitLog API, displayed as a responsive 3-column grid with category tags, equipment info, and stats (duration, calories, rating).
 2. **Workout Detail Pages** — dynamic routes (`/workout/[id]`) showing full workout info, key specs, step-by-step instructions, and action buttons.
