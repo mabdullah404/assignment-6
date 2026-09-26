@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="relative h-4 w-4 overflow-hidden rounded-sm border border-[#1db6ff]/40 bg-[#09131d]">
             <Image src="/assets/Vector.png" alt="FitLog logo" fill className="object-contain" />
           </div>
-          <span className="font-bold uppercase tracking-[0.2em] text-neutral-300">FITLOG</span>
+          <span className="font-bold  text-neutral-300 text-1xl">FITLOG</span>
         </div>
         <div className="text-right">© 2025 FitLog — Workout Library. Train hard, log honest.</div>
       </div>

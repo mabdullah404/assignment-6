@@ -22,7 +22,7 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Image src="/assets/logo.png" alt="FITLOG Logo" width={25} height={32} />
+          <Image src="/assets/logo.png" alt="FITLOG Logo" width={20} height={32} />
           <span className="font-bold tracking-wide text-white">FITLOG</span>
         </Link>
 
