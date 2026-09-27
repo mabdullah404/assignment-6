@@ -15,7 +15,7 @@ FitLog is a dark, no-nonsense gym companion web app where users can browse a lib
 
 
 
-All data:
+All data :
 https://api.api-store.workers.dev/api/fitlog
 Single Data:
 https://api.api-store.workers.dev/api/fitlog/:id
